@@ -1,6 +1,7 @@
 package com.bibliotek.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.gson.annotations.Expose;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -66,6 +67,7 @@ public class Book {
     private LocalDateTime modified = LocalDateTime.now();
 
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
     @ToString.Exclude
     private Collection<User> users = new ArrayList<>();
