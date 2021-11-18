@@ -1,4 +1,4 @@
-package com.bibliotek.dao;
+package com.bibliotek.init;
 
 import com.bibliotek.model.Book;
 import com.bibliotek.model.User;
@@ -10,6 +10,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -25,7 +27,7 @@ public class DataInitializer implements CommandLineRunner {
                     "Podigoto",
                     "Ivan Vazov",
                     "roman",
-                    LocalDate.of(1912,2,24)
+                    LocalDate.of(1912, 2, 24)
             ),
             new Book(
                     "It",
@@ -37,7 +39,7 @@ public class DataInitializer implements CommandLineRunner {
                     "Short story about everything",
                     "Nqkoi si",
                     "qka",
-                    LocalDate.of(2005,12,11)
+                    LocalDate.of(2005, 12, 11)
             )
     );
 
@@ -46,23 +48,35 @@ public class DataInitializer implements CommandLineRunner {
                     "Georgi",
                     "Petrov",
                     "admin@abv.bg",
-                    "admin",
+                    "admin98admin",
                     User.ROLE_ADMIN),
             new User("Elena",
                     "Markova",
                     "flywithlove@gmail.com",
-                    "elena98",
+                    "elena9813",
                     User.ROLE_USER)
     );
 
 
     @Override
     public void run(String... args) throws Exception {
-        SAMPLE_USERS.forEach(user -> {
-            user.setBooks(SAMPLE_BOOKS);
-            userService.createUser(user);
-        });
-        log.info("Created Users: " + userService.getUsers());
-        log.info("Created Books: " + bookService.getBooks());
+        if (bookService.getBooksCount() == 0) {
+            SAMPLE_BOOKS.forEach(book -> {
+                book.setCreated(LocalDateTime.now());
+                book.setModified(LocalDateTime.now());
+                bookService.createBook(book);
+            });
+            log.info("Created Books: " + bookService.getBooks());
+        }
+
+        if (userService.getUsersCount() == 0) {
+            SAMPLE_USERS.forEach(user -> {
+                user.setCreated(new Date());
+                user.setModified(new Date());
+                user.setBooks(SAMPLE_BOOKS);
+                userService.createUser(user);
+            });
+            log.info("Created Users: " + userService.getUsers());
+        }
     }
 }
