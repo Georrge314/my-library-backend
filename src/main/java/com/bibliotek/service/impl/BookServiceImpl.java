@@ -1,9 +1,11 @@
 package com.bibliotek.service.impl;
 
 import com.bibliotek.dao.BookRepo;
+import com.bibliotek.dao.UserRepo;
 import com.bibliotek.exception.EntityNotFoundException;
 import com.bibliotek.exception.InvalidEntityException;
 import com.bibliotek.model.Book;
+import com.bibliotek.model.User;
 import com.bibliotek.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -19,6 +22,9 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Autowired
     private BookRepo bookRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     @Override
     @Transactional
@@ -44,9 +50,16 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book deleteBook(Long id) {
-        Book old = getBookById(id);
+        Book toDelete = getBookById(id);
+
+        Set<User> users = toDelete.getUsers();
+        for (User user : users) {
+            user.removeBook(toDelete);
+            userRepo.save(user);
+        }
+
         bookRepo.deleteById(id);
-        return old;
+        return toDelete;
     }
 
     @Override

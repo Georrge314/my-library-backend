@@ -8,9 +8,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 @Entity
 @Data
@@ -81,5 +79,14 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
     @ToString.Exclude
-    private Collection<Book> books = new ArrayList<>();
+    private Set<Book> books = new HashSet<>();
+
+    public void addBook(Book book) {
+        this.books.add(book);
+        book.getUsers().add(this);
+    }
+
+    public void removeBook(Book book) {
+        this.books.remove(book);
+    }
 }

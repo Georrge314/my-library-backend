@@ -1,5 +1,6 @@
 package com.bibliotek.service.impl;
 
+import com.bibliotek.dao.BookRepo;
 import com.bibliotek.dao.UserRepo;
 import com.bibliotek.exception.EntityNotFoundException;
 import com.bibliotek.exception.InvalidEntityException;
@@ -21,6 +22,9 @@ import java.util.Date;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private BookRepo bookRepo;
 
     @Override
     @Transactional
@@ -50,11 +54,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User deleteUser(Long id) {
-        User old = userRepo.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("User with ID=%s not found.", id));
-        });
+        User toDelete = getUserById(id);
         userRepo.deleteById(id);
-        return old;
+        return toDelete;
     }
 
     @Override

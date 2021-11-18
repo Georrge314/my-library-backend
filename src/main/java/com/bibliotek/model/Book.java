@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -30,6 +32,7 @@ public class Book {
     @NonNull
     @NotNull
     @Column(unique = true)
+    @EqualsAndHashCode.Include
     private String title;
 
     @Expose
@@ -70,5 +73,15 @@ public class Book {
     @JsonIgnore
     @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
     @ToString.Exclude
-    private Collection<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
+
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getBooks().add(this);
+    }
+
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getBooks().remove(this);
+    }
 }

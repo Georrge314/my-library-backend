@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Component
 @Slf4j
@@ -22,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private BookService bookService;
 
-    private static final List<Book> SAMPLE_BOOKS = List.of(
+    private static final Set<Book> SAMPLE_BOOKS = Set.of(
             new Book(
                     "Podigoto",
                     "Ivan Vazov",
@@ -43,7 +44,7 @@ public class DataInitializer implements CommandLineRunner {
             )
     );
 
-    private static final List<User> SAMPLE_USERS = List.of(
+    private static final Set<User> SAMPLE_USERS = Set.of(
             new User(
                     "Georgi",
                     "Petrov",
