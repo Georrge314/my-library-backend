@@ -6,8 +6,10 @@ import com.bibliotek.exception.EntityNotFoundException;
 import com.bibliotek.exception.InvalidEntityException;
 import com.bibliotek.model.User;
 import com.bibliotek.service.UserService;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -47,7 +50,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUser(User user) {
+        Date created = userRepo.getById(user.getId()).getCreated();
+        user.setCreated(created);
         user.setModified(new Date());
+        user.setRoles(User.ROLE_USER);
+        user.setActive(true);
         return userRepo.save(user);
     }
 

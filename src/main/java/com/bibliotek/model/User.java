@@ -1,6 +1,7 @@
 package com.bibliotek.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.Expose;
 import lombok.*;
@@ -11,12 +12,14 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Entity
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 //@JsonIgnoreProperties({"authorities", "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled"})
 public class User {
     public static final String ROLE_USER = "ROLE_USER";
@@ -79,6 +82,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
     @ToString.Exclude
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Set<Book> books = new HashSet<>();
 
     public void addBook(Book book) {
