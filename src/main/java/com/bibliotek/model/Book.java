@@ -72,7 +72,7 @@ public class Book {
 
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "books")
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
 

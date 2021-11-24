@@ -76,7 +76,7 @@ public class User {
 
     private boolean active = true;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(
             name = "users_books",
             joinColumns = @JoinColumn(name = "user_id"),

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Component
@@ -63,8 +62,6 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (bookService.getBooksCount() == 0) {
             SAMPLE_BOOKS.forEach(book -> {
-                book.setCreated(LocalDateTime.now());
-                book.setModified(LocalDateTime.now());
                 bookService.createBook(book);
             });
             log.info("Created Books: " + bookService.getBooks());
@@ -72,8 +69,6 @@ public class DataInitializer implements CommandLineRunner {
 
         if (userService.getUsersCount() == 0) {
             SAMPLE_USERS.forEach(user -> {
-                user.setCreated(new Date());
-                user.setModified(new Date());
                 user.setBooks(SAMPLE_BOOKS);
                 userService.createUser(user);
             });
