@@ -2,6 +2,7 @@ package com.bibliotek.web;
 
 import com.bibliotek.exception.InvalidEntityException;
 import com.bibliotek.model.Book;
+import com.bibliotek.model.User;
 import com.bibliotek.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.annotation.security.RolesAllowed;
 import java.net.URI;
 import java.util.Collection;
 
@@ -30,11 +32,13 @@ public class BookController {
         return bookService.getBookById(id);
     }
 
+    @RolesAllowed(User.ROLE_ADMIN)
     @DeleteMapping("{id}")
     public Book deleteBook(@PathVariable Long id) {
         return bookService.deleteBook(id);
     }
 
+    @RolesAllowed(User.ROLE_ADMIN)
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody Book book) {
         Book created = bookService.createBook(book);
@@ -44,6 +48,7 @@ public class BookController {
         return ResponseEntity.created(location).body(created);
     }
 
+    @RolesAllowed(User.ROLE_ADMIN)
     @PutMapping("{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
         if (book.getId() != id) {

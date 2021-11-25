@@ -1,4 +1,39 @@
 package com.bibliotek.web;
 
+import com.bibliotek.model.Credentials;
+import com.bibliotek.model.JwtResponse;
+import com.bibliotek.model.User;
+import com.bibliotek.service.UserService;
+import com.bibliotek.util.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/login")
+//@CrossOrigin()
+@Slf4j
 public class LoginController {
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping
+    public ResponseEntity<JwtResponse> login(@RequestBody Credentials credentials) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
+        User user = userService.getUserByUsername(credentials.getUsername());
+        String token = jwtUtil.generateToken(user);
+        log.info("Login successful for {}: {}", user.getUsername(), token);
+        return ResponseEntity.ok(new JwtResponse(token, user));
+    }
 }

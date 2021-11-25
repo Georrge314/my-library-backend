@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import javax.annotation.security.RolesAllowed;
+import javax.management.relation.Role;
 import java.net.URI;
 import java.util.Collection;
 
@@ -20,6 +22,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @RolesAllowed(User.ROLE_ADMIN)
     @GetMapping
     public Collection<User> getUsers() {
         return userService.getUsers();

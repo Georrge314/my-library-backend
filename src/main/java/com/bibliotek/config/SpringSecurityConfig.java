@@ -1,21 +1,25 @@
 package com.bibliotek.config;
 
-import org.apache.catalina.filters.CorsFilter;
+import com.bibliotek.filters.JwtRequestFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -42,24 +46,33 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 ).and();
 
         http.authorizeRequests()
-                .antMatchers("/").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/actuator/info").permitAll()
+                .antMatchers("/actuator/health").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/swagger*/**").permitAll();
 
-//        http.addFilterBefore(jwtTokenFilter,
-//                UsernameAndPasswordAuthenticationFilter.class);
+//                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/users/**").hasRole("Admin")
+//                .antMatchers(HttpMethod.DELETE, "api/users/**").permitAll()
+//                .antMatchers(HttpMethod.PUT, "api/users/").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/books/**").permitAll()
+//                .antMatchers(HttpMethod.POST , "/api/books").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.PUT, "/api/books").hasRole("ADMIN")
+//                .antMatchers(HttpMethod.DELETE, "/api/books").hasRole("ADMIN")
+//                .anyRequest().authenticated();
 
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source =
-//                new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//        config.setAllowCredentials(true);
-//        config.addAllowedOrigin("*");
-//        config.addAllowedHeader("*");
-//        config.addAllowedMethod("*");
-//        source.registerCorsConfiguration("/**", config);
-//        return new CorsFilter(source);
-//    }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    @Bean
+    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
+        return new GrantedAuthorityDefaults(""); //remove ROLE prefix
+    }
 }
