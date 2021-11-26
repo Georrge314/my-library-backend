@@ -6,7 +6,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
 @NoArgsConstructor
 public class Credentials {
     @NonNull
