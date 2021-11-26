@@ -1,7 +1,10 @@
 package com.bibliotek.init;
 
+import com.bibliotek.model.Author;
 import com.bibliotek.model.Book;
+import com.bibliotek.model.Comment;
 import com.bibliotek.model.User;
+import com.bibliotek.service.AuthorService;
 import com.bibliotek.service.BookService;
 import com.bibliotek.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +13,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -23,23 +25,46 @@ public class DataInitializer implements CommandLineRunner {
     private BookService bookService;
 
     private static final Set<Book> SAMPLE_BOOKS = Set.of(
-            new Book(
-                    "Podigoto",
-                    "Ivan Vazov",
-                    "roman",
-                    LocalDate.of(1912, 2, 24)
+            new Book("Title",
+                    new Author(
+                            "Ivan Markov",
+                            "Bulgaria",
+                            LocalDate.of(1960,12,12)
+                    ),
+                    "genre",
+                    LocalDate.of(1925, 10, 10),
+                    "some description",
+                    2L,
+                    1L
             ),
+
             new Book(
-                    "It",
-                    "Steven King",
-                    "horror",
-                    LocalDate.of(1980, 10, 14)
+                    "New Title",
+                    new Author(
+                            "Steven King",
+                            "USA",
+                            LocalDate.of(1947,12,12)
+                    ),
+                    "new genre",
+                    LocalDate.of(2010, 5, 8),
+                    "new description book",
+                    10L,
+                    0L
             ),
+
             new Book(
-                    "Short story about everything",
-                    "Nqkoi si",
-                    "qka",
-                    LocalDate.of(2005, 12, 11)
+                    "Another Book",
+                    new Author(
+                            "Dave Markov",
+                            "Bulgaria",
+                            LocalDate.of(1987,12,12)
+                    ),
+                    "another genre",
+                    LocalDate.of(2015, 10, 12),
+                    "new description book 2",
+                    10L,
+                    10L
+
             )
     );
 
@@ -48,12 +73,25 @@ public class DataInitializer implements CommandLineRunner {
                     "Georgi",
                     "Petrov",
                     "admin@abv.bg",
-                    "admin98admin",
+                    "112233",
                     User.ROLE_ADMIN),
+
             new User("Elena",
                     "Markova",
-                    "flywithlove@gmail.com",
-                    "elena9813",
+                    "elena98@gmail.com",
+                    "112233",
+                    User.ROLE_ADMIN),
+
+            new User("Ivan",
+                    "Petrov",
+                    "ivanPv@gmail.com",
+                    "112233",
+                    User.ROLE_USER),
+
+            new User("Pesho",
+                    "Vasilev",
+                    "peshoVasilev@gmail.com",
+                    "112233",
                     User.ROLE_USER)
     );
 

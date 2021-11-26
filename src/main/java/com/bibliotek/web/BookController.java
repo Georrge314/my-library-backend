@@ -14,7 +14,7 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("/api/books")
-//@CrossOrigin
+@CrossOrigin("http://localhost:3000")
 @Slf4j
 public class BookController {
     @Autowired

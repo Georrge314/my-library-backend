@@ -38,8 +38,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**"
     };
 
-
-
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 

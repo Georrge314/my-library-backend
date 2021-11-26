@@ -3,7 +3,6 @@ package com.bibliotek.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.gson.annotations.Expose;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -23,31 +22,26 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Book {
-    @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Expose
     @NonNull
     @NotNull
     @Column(unique = true)
     @EqualsAndHashCode.Include
     private String title;
 
-    @Expose
-    @Length(min = 3, max = 40)
-    @NotNull
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @NonNull
-    private String author;
+    @NotNull
+    private Author author;
 
-    @Expose
     @NonNull
     @NotNull
     private String genre;
 
-    @Expose
     @JsonFormat(pattern = "yyyy:MM:dd")
     @NotNull
     @NonNull
@@ -56,17 +50,22 @@ public class Book {
     @Length(min = 5, max = 512)
     private String imageUrl;
 
-    @Expose
+    @NonNull
+    @NotNull
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Expose
-    private Long rating;
+    @NonNull
+    @NotNull
+    private Long likes;
 
-    @Expose
+    @NonNull
+    @NotNull
+    private Long dislikes;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created = LocalDateTime.now();
 
-    @Expose
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modified = LocalDateTime.now();
 
@@ -75,6 +74,9 @@ public class Book {
     @ManyToMany(mappedBy = "books")
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
+    private Set<Comment> comments = new HashSet<>();
 
     public void addUser(User user) {
         this.users.add(user);
