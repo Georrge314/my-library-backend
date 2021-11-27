@@ -33,7 +33,7 @@ public class Book {
     @EqualsAndHashCode.Include
     private String title;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @NonNull
     @NotNull
     private Author author;
@@ -42,7 +42,7 @@ public class Book {
     @NotNull
     private String genre;
 
-    @JsonFormat(pattern = "yyyy:MM:dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull
     @NonNull
     private LocalDate publishedDate;

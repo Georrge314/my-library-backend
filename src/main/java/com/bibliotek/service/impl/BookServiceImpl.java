@@ -4,6 +4,7 @@ import com.bibliotek.dao.BookRepo;
 import com.bibliotek.dao.UserRepo;
 import com.bibliotek.exception.EntityNotFoundException;
 import com.bibliotek.exception.InvalidEntityException;
+import com.bibliotek.model.Author;
 import com.bibliotek.model.Book;
 import com.bibliotek.model.User;
 import com.bibliotek.service.AuthorService;
@@ -27,6 +28,8 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private UserRepo userRepo;
 
+    @Autowired AuthorService authorService;
+
     @Override
     @Transactional
     public Book createBook(Book book) {
@@ -35,6 +38,11 @@ public class BookServiceImpl implements BookService {
             throw new InvalidEntityException(
                     String.format("Book with title '%s' already exists.", book.getTitle()));
         } catch (EntityNotFoundException exception) {
+
+            try {
+                Author authorByFullName = authorService.getAuthorByFullName(book.getAuthor().getFullName());
+                book.setAuthor(authorByFullName);
+            } catch (EntityNotFoundException ignored) { }
             return bookRepo.save(book);
         }
     }
@@ -43,6 +51,10 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public Book updateBook(Book book) {
         book.setModified(LocalDateTime.now());
+        try {
+            Author authorByFullName = authorService.getAuthorByFullName(book.getAuthor().getFullName());
+            book.setAuthor(authorByFullName);
+        } catch (EntityNotFoundException ignored) {}
         return bookRepo.save(book);
     }
 

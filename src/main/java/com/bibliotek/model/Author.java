@@ -1,6 +1,7 @@
 package com.bibliotek.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -46,5 +47,6 @@ public class Author {
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     @ToString.Exclude
+    @JsonIgnore
     private Set<Book> books = new HashSet<>();
 }

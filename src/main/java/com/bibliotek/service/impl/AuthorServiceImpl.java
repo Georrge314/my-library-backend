@@ -1,6 +1,7 @@
 package com.bibliotek.service.impl;
 
 import com.bibliotek.dao.AuthorRepo;
+import com.bibliotek.exception.EntityNotFoundException;
 import com.bibliotek.model.Author;
 import com.bibliotek.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author getAuthorByFullName(String fullName) {
-        return null;
+        return authorRepo.findByFullName(fullName).orElseThrow(() -> {
+            throw new EntityNotFoundException(String.format("Author with name: %s not found", fullName));
+        });
     }
 
 

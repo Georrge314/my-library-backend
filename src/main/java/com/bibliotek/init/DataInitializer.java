@@ -4,8 +4,8 @@ import com.bibliotek.model.Author;
 import com.bibliotek.model.Book;
 import com.bibliotek.model.Comment;
 import com.bibliotek.model.User;
-import com.bibliotek.service.AuthorService;
 import com.bibliotek.service.BookService;
+import com.bibliotek.service.CommentService;
 import com.bibliotek.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 @Component
@@ -23,6 +22,8 @@ public class DataInitializer implements CommandLineRunner {
     private UserService userService;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private CommentService commentService;
 
     private static final Set<Book> SAMPLE_BOOKS = Set.of(
             new Book("Title",
