@@ -26,6 +26,7 @@ public class Author {
     @Length(min = 5, max = 50)
     @NonNull
     @NotNull
+    @Column(unique = true)
     private String fullName;
 
     @Length(min = 3, max = 50)

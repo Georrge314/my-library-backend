@@ -6,6 +6,7 @@ import com.bibliotek.exception.EntityNotFoundException;
 import com.bibliotek.exception.InvalidEntityException;
 import com.bibliotek.model.Book;
 import com.bibliotek.model.User;
+import com.bibliotek.service.AuthorService;
 import com.bibliotek.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,6 @@ public class BookServiceImpl implements BookService {
             throw new InvalidEntityException(
                     String.format("Book with title '%s' already exists.", book.getTitle()));
         } catch (EntityNotFoundException exception) {
-            book.setCreated(LocalDateTime.now());
-            book.setModified(LocalDateTime.now());
             return bookRepo.save(book);
         }
     }

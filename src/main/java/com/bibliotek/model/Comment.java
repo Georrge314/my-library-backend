@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -41,12 +42,12 @@ public class Comment {
     @NonNull
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date created = new Date();
+    private LocalDateTime created = LocalDateTime.now();
 
     @NonNull
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date modified = new Date();
+    private LocalDateTime modified = LocalDateTime.now();
 
     @NonNull
     @NotNull
