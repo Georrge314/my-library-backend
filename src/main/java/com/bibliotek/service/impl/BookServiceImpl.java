@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -50,7 +51,11 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book updateBook(Book book) {
+        LocalDateTime created = getBookByTitle(book.getTitle()).getCreated();
+
         book.setModified(LocalDateTime.now());
+        book.setCreated(created);
+
         try {
             Author authorByFullName = authorService.getAuthorByFullName(book.getAuthor().getFullName());
             book.setAuthor(authorByFullName);
