@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -51,7 +50,8 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book updateBook(Book book) {
-        LocalDateTime created = getBookByTitle(book.getTitle()).getCreated();
+        System.out.println(book.getAuthor());
+        LocalDateTime created = getBookById(book.getId()).getCreated();
 
         book.setModified(LocalDateTime.now());
         book.setCreated(created);
@@ -59,9 +59,15 @@ public class BookServiceImpl implements BookService {
         try {
             Author authorByFullName = authorService.getAuthorByFullName(book.getAuthor().getFullName());
             book.setAuthor(authorByFullName);
-        } catch (EntityNotFoundException ignored) {}
+        } catch (EntityNotFoundException ex) {
+            authorService.createAuthor(book.getAuthor());
+            Author persistedAuthor = authorService.getAuthorByFullName(book.getAuthor().getFullName());
+            book.setAuthor(persistedAuthor);
+        }
+
         return bookRepo.save(book);
     }
+
 
     @Override
     @Transactional

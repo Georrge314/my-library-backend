@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +45,12 @@ public class Author {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate died;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime created = LocalDateTime.now();
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime modified = LocalDateTime.now();
 
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     @ToString.Exclude
