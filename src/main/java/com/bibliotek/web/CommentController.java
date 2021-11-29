@@ -1,7 +1,7 @@
 package com.bibliotek.web;
 
-import com.bibliotek.exception.InvalidEntityException;
-import com.bibliotek.model.Comment;
+import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.domain.model.Comment;
 import com.bibliotek.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +46,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
+        System.out.println(comment);
         Comment created = commentService.createComment(comment);
         URI uri = MvcUriComponentsBuilder
                 .fromMethodName(CommentController.class, "createComment", Comment.class)

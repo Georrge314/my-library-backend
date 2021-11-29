@@ -1,4 +1,4 @@
-package com.bibliotek.util;
+package com.bibliotek.config.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtUtil {
+public class JwtTokenUtil {
     public static final long JWT_TOKEN_VALIDITY = 3 * 60 * 60;  // 3 hours
 
     private String SECRET_KEY = "aswrlxmfl12476yAA";

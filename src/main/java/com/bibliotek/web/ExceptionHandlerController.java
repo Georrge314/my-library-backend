@@ -1,8 +1,7 @@
 package com.bibliotek.web;
 
-import com.bibliotek.exception.EntityNotFoundException;
-import com.bibliotek.exception.InvalidEntityException;
-import com.bibliotek.model.ErrorResponse;
+import com.bibliotek.domain.exception.EntityNotFoundException;
+import com.bibliotek.domain.exception.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

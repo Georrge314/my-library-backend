@@ -1,4 +1,4 @@
-package com.bibliotek.exception;
+package com.bibliotek.domain.exception;
 
 public class InvalidEntityException extends RuntimeException {
     public InvalidEntityException() {

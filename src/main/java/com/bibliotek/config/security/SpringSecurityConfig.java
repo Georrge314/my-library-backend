@@ -1,7 +1,6 @@
-package com.bibliotek.config;
+package com.bibliotek.config.security;
 
-import com.bibliotek.exception.EntityNotFoundException;
-import com.bibliotek.filters.JwtRequestFilter;
+import com.bibliotek.domain.exception.EntityNotFoundException;
 import com.bibliotek.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Autowired
-    private JwtRequestFilter jwtRequestFilter;
+    private JwtTokenFilter jwtRequestFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -1,4 +1,4 @@
-package com.bibliotek.model;
+package com.bibliotek.web;
 
 import lombok.*;
 

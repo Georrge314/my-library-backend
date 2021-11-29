@@ -1,6 +1,6 @@
 package com.bibliotek.service;
 
-import com.bibliotek.model.User;
+import com.bibliotek.domain.model.User;
 
 import java.util.Collection;
 

@@ -1,10 +1,8 @@
 package com.bibliotek.web;
 
-import com.bibliotek.model.Credentials;
-import com.bibliotek.model.JwtResponse;
-import com.bibliotek.model.User;
+import com.bibliotek.domain.model.User;
 import com.bibliotek.service.UserService;
-import com.bibliotek.util.JwtUtil;
+import com.bibliotek.config.security.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +20,7 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtTokenUtil jwtUtil;
 
     @PostMapping
     public ResponseEntity<JwtResponse> login(@RequestBody Credentials credentials) {

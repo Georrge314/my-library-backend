@@ -1,4 +1,4 @@
-package com.bibliotek.model;
+package com.bibliotek.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;

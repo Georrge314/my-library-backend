@@ -1,4 +1,4 @@
-package com.bibliotek.model;
+package com.bibliotek.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -10,7 +10,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,16 +35,8 @@ public class User implements UserDetails {
     private Long id;
 
     @NonNull
-    @Length(min = 2, max = 40)
-    private String firstName;
-
-    @NonNull
-    @Length(min = 2, max = 40)
-    private String lastName;
-
-    @NonNull
     @Length(min = 5, max = 40)
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     @NotNull
     @EqualsAndHashCode.Include
     private String username;
@@ -55,45 +49,35 @@ public class User implements UserDetails {
     private String password;
 
     @NonNull
+    @Length(min = 4, max = 100)
+    @Column(nullable = false)
     @NotNull
-    private String roles;
+    @Email
+    private String email;
+
+    @NonNull
+    @Length(min = 2, max = 40)
+    private String firstName;
+
+    @NonNull
+    @Length(min = 2, max = 40)
+    private String lastName;
+
+    @NonNull
+    @NotNull
+    private Set<Role> authorities = new HashSet<>();
 
     @Length(min = 8, max = 512)
+    @Column(name = "image_url")
     private String imageUrl;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date created = new Date();
+    private LocalDateTime created = LocalDateTime.now();
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date modified = new Date();
-
-
-    @ManyToMany()
-    @JoinTable(
-            name = "users_books",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id"))
-    @ToString.Exclude
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Set<Book> books = new HashSet<>();
-
-    public void addBook(Book book) {
-        this.books.add(book);
-        book.getUsers().add(this);
-    }
-
-    public void removeBook(Book book) {
-        this.books.remove(book);
-    }
+    private LocalDateTime modified = LocalDateTime.now();
 
     private boolean active = true;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(roles.split("\\s*,\\s*"))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -115,3 +99,12 @@ public class User implements UserDetails {
         return active;
     }
 }
+
+//@ManyToMany()
+//    @JoinTable(
+//            name = "users_books",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "book_id"))
+//    @ToString.Exclude
+//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//    private Set<Book> books = new HashSet<>();

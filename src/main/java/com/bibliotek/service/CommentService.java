@@ -1,6 +1,6 @@
 package com.bibliotek.service;
 
-import com.bibliotek.model.Comment;
+import com.bibliotek.domain.model.Comment;
 
 import java.util.Collection;
 

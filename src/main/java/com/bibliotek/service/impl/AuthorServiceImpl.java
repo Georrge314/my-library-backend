@@ -1,9 +1,9 @@
 package com.bibliotek.service.impl;
 
 import com.bibliotek.dao.AuthorRepo;
-import com.bibliotek.exception.EntityNotFoundException;
-import com.bibliotek.exception.InvalidEntityException;
-import com.bibliotek.model.Author;
+import com.bibliotek.domain.exception.EntityNotFoundException;
+import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.domain.model.Author;
 import com.bibliotek.service.AuthorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

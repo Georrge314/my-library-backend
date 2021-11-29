@@ -1,6 +1,6 @@
 package com.bibliotek.service;
 
-import com.bibliotek.model.Book;
+import com.bibliotek.domain.model.Book;
 
 import java.util.Collection;
 

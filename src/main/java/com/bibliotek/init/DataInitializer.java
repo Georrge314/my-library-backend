@@ -1,9 +1,8 @@
 package com.bibliotek.init;
 
-import com.bibliotek.model.Author;
-import com.bibliotek.model.Book;
-import com.bibliotek.model.Comment;
-import com.bibliotek.model.User;
+import com.bibliotek.domain.model.Author;
+import com.bibliotek.domain.model.Book;
+import com.bibliotek.domain.model.User;
 import com.bibliotek.service.BookService;
 import com.bibliotek.service.CommentService;
 import com.bibliotek.service.UserService;

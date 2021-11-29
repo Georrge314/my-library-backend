@@ -1,6 +1,6 @@
 package com.bibliotek.dao;
 
-import com.bibliotek.model.User;
+import com.bibliotek.domain.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

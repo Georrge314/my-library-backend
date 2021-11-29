@@ -1,7 +1,7 @@
 package com.bibliotek.web;
 
-import com.bibliotek.exception.InvalidEntityException;
-import com.bibliotek.model.Book;
+import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.domain.model.Book;
 import com.bibliotek.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

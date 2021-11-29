@@ -1,4 +1,4 @@
-package com.bibliotek.exception;
+package com.bibliotek.domain.exception;
 
 public class EntityNotFoundException extends RuntimeException{
     public EntityNotFoundException() {

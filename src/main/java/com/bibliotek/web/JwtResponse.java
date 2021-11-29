@@ -1,5 +1,6 @@
-package com.bibliotek.model;
+package com.bibliotek.web;
 
+import com.bibliotek.domain.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

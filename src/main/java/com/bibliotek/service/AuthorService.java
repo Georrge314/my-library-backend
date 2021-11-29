@@ -1,6 +1,6 @@
 package com.bibliotek.service;
 
-import com.bibliotek.model.Author;
+import com.bibliotek.domain.model.Author;
 
 import java.util.Collection;
 

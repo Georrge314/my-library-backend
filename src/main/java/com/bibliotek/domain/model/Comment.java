@@ -1,6 +1,8 @@
-package com.bibliotek.model;
+package com.bibliotek.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,10 +27,14 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @NonNull
-    @NotNull
-    @ManyToOne
+    @ManyToOne()
+    @JsonIgnore
     private User creator;
+
+    @NonNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Transient
+    private Long creatorId;
 
     @NonNull
     @NotNull
@@ -38,18 +44,18 @@ public class Comment {
     @NotNull
     private Long dislikes;
 
-    @NonNull
-    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created = LocalDateTime.now();
 
-    @NonNull
-    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modified = LocalDateTime.now();
 
-    @NonNull
-    @NotNull
     @ManyToOne()
+    @JsonIgnore
     private Book book;
+
+    @NonNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Transient
+    private Long bookId;
 }

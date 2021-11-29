@@ -2,11 +2,11 @@ package com.bibliotek.service.impl;
 
 import com.bibliotek.dao.BookRepo;
 import com.bibliotek.dao.UserRepo;
-import com.bibliotek.exception.EntityNotFoundException;
-import com.bibliotek.exception.InvalidEntityException;
-import com.bibliotek.model.Author;
-import com.bibliotek.model.Book;
-import com.bibliotek.model.User;
+import com.bibliotek.domain.exception.EntityNotFoundException;
+import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.domain.model.Author;
+import com.bibliotek.domain.model.Book;
+import com.bibliotek.domain.model.User;
 import com.bibliotek.service.AuthorService;
 import com.bibliotek.service.BookService;
 import lombok.extern.slf4j.Slf4j;
