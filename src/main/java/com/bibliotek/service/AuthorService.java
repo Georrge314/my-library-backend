@@ -1,21 +1,22 @@
 package com.bibliotek.service;
 
-import com.bibliotek.domain.model.Author;
+import com.bibliotek.domain.dto.author.AuthorView;
+import com.bibliotek.domain.dto.author.EditAuthorRequest;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface AuthorService {
-    Author createAuthor(Author author);
+    AuthorView createAuthor(EditAuthorRequest request);
 
-    Author updateAuthor(Author author);
+    AuthorView updateAuthor(Long id, EditAuthorRequest request);
 
-    Author deleteAuthor(Long id);
+    AuthorView deleteAuthor(Long id);
 
-    Author getAuthorById(Long id);
+    AuthorView getAuthorById(Long id);
 
-    Author getAuthorByFullName(String fullName);
+    List<AuthorView> getAuthors(Iterable<Long> ids);
 
-    Collection<Author> getAuthors();
+    List<AuthorView> getBookAuthors(Long bookId);
 
     Long getAuthorsCount();
 }

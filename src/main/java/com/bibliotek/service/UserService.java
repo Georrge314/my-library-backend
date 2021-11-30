@@ -1,21 +1,22 @@
 package com.bibliotek.service;
 
+import com.bibliotek.domain.dto.user.CreateUserRequest;
+import com.bibliotek.domain.dto.user.UpdateUserRequest;
+import com.bibliotek.domain.dto.user.UserView;
 import com.bibliotek.domain.model.User;
 
 import java.util.Collection;
 
 public interface UserService {
-    User createUser(User user);
+    UserView createUser(CreateUserRequest request);
 
-    User updateUser(User user);
+    UserView updateUser(Long id, UpdateUserRequest request);
 
-    User deleteUser(Long id);
+    UserView deleteUser(Long id);
 
-    User getUserById(Long id);
+    UserView getUserById(Long id);
 
-    User getUserByUsername(String username);
-
-    Collection<User> getUsers();
+    boolean usernameExists(String username);
 
     Long getUsersCount();
 }

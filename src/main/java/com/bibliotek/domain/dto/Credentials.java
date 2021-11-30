@@ -1,4 +1,4 @@
-package com.bibliotek.web;
+package com.bibliotek.domain.dto;
 
 import lombok.*;
 

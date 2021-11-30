@@ -1,57 +1,66 @@
 package com.bibliotek.web;
 
-import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.domain.dto.ListResponse;
+import com.bibliotek.domain.dto.author.AuthorView;
+import com.bibliotek.domain.dto.book.BookView;
+import com.bibliotek.domain.dto.book.EditBookRequest;
+import com.bibliotek.domain.dto.comment.CommentView;
 import com.bibliotek.domain.model.Book;
+import com.bibliotek.domain.model.Role;
+import com.bibliotek.service.AuthorService;
 import com.bibliotek.service.BookService;
-import lombok.extern.slf4j.Slf4j;
+import com.bibliotek.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.Collection;
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api/book")
 @CrossOrigin("http://localhost:3000")
-@Slf4j
 public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping
-    public Collection<Book> getBooks() {
-        return bookService.getBooks();
-    }
+    @Autowired
+    private AuthorService authorService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("{id}")
-    public Book getBooks(@PathVariable Long id) {
+    public BookView getBooks(@PathVariable Long id) {
         return bookService.getBookById(id);
     }
 
+    @RolesAllowed(Role.BOOK_ADMIN)
     @DeleteMapping("{id}")
-    public Book deleteBook(@PathVariable Long id) {
+    public BookView deleteBook(@PathVariable Long id) {
         return bookService.deleteBook(id);
     }
 
+    @RolesAllowed(Role.BOOK_ADMIN)
     @PostMapping
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        Book created = bookService.createBook(book);
-        URI location = MvcUriComponentsBuilder.fromMethodName(BookController.class, "createBook", Book.class)
-                .pathSegment("{id}").buildAndExpand(created.getId()).toUri();
-        log.info("Book created: {}", book.getTitle());
-        return ResponseEntity.created(location).body(created);
+    public BookView createBook(@RequestBody @Valid EditBookRequest request) {
+        return bookService.createBook(request);
     }
 
+    @RolesAllowed(Role.BOOK_ADMIN)
     @PutMapping("{id}")
-    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book book) {
-        if (book.getId() != id) {
-            throw new InvalidEntityException(
-                    String.format("Book ID=%s from path is different from Entity ID=%s", id, book.getId()));
-        }
-        Book updated = bookService.updateBook(book);
-        log.info("Book updated: {}", updated);
-        return ResponseEntity.ok(updated);
+    public BookView editBook(@PathVariable Long id, @RequestBody @Valid EditBookRequest request) {
+        return bookService.updateBook(id, request);
     }
+
+    @GetMapping("{id}/author")
+    public ListResponse<AuthorView> getAuthors(@PathVariable Long id) {
+        return new ListResponse<>(authorService.getBookAuthors(id));
+    }
+
+    @GetMapping("{id}/comment")
+    public ListResponse<CommentView> getComments(@PathVariable Long id) {
+        return new ListResponse<>(commentService.getBookComments(id));
+    }
+
+    //TODO: impl search book that return list of books..
 }

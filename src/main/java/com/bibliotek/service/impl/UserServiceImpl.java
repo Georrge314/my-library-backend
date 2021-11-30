@@ -1,89 +1,112 @@
 package com.bibliotek.service.impl;
 
-import com.bibliotek.dao.BookRepo;
 import com.bibliotek.dao.UserRepo;
-import com.bibliotek.domain.exception.EntityNotFoundException;
+import com.bibliotek.domain.dto.user.CreateUserRequest;
+import com.bibliotek.domain.dto.user.UpdateUserRequest;
+import com.bibliotek.domain.dto.user.UserView;
 import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.domain.mapper.UserEditMapper;
+import com.bibliotek.domain.mapper.UserViewMapper;
 import com.bibliotek.domain.model.User;
 import com.bibliotek.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Date;
+import java.util.HashSet;
 
 @Service
 @Slf4j
-@Transactional(readOnly = true)
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepo userRepo;
-
     @Autowired
-    private BookRepo bookRepo;
+    private UserViewMapper viewMapper;
+    @Autowired
+    private UserEditMapper editMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    @Override
+
     @Transactional
-    public User createUser(User user) {
-        userRepo.findByUsername(user.getUsername()).ifPresent(u -> {
-            throw new InvalidEntityException(String.format("User with username: '%s' already exists.", u.getUsername()));
-        });
-        user.setCreated(new Date());
-        user.setModified(new Date());
-        if (user.getRoles() == null || user.getRoles().length() == 0) {
-            user.setRoles(User.ROLE_USER);
+    @Override
+    public UserView createUser(CreateUserRequest request) {
+        if (userRepo.findByUsername(request.getUsername()).isPresent()) {
+            throw new InvalidEntityException(
+                    String.format("User with username: %s already exists.", request.getUsername()));
         }
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setActive(true);
 
-        return userRepo.save(user);
+        if (!request.getPassword().equals(request.getRePassword())) {
+            throw new InvalidEntityException("Passwords don't match!");
+        }
+
+        if (request.getAuthorities() == null) {
+            request.setAuthorities(new HashSet<>());
+        }
+
+        User user = editMapper.create(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user = userRepo.save(user);
+        log.info("User with username: {} created.", user.getUsername());
+        return viewMapper.toUserView(user);
     }
 
-    @Override
     @Transactional
-    public User updateUser(User user) {
-        Date created = userRepo.getById(user.getId()).getCreated();
-        user.setCreated(created);
-        user.setModified(new Date());
-        user.setRoles(User.ROLE_USER);
-        user.setActive(true);
-        return userRepo.save(user);
+    @Override
+    public UserView updateUser(Long id, UpdateUserRequest request) {
+        User user = userRepo.getById(id);
+        editMapper.update(request, user);
+
+        user = userRepo.save(user);
+
+        log.info("User with ID={} updated.", id);
+        return viewMapper.toUserView(user);
     }
 
-    @Override
     @Transactional
-    public User deleteUser(Long id) {
-        User toDelete = getUserById(id);
-        userRepo.deleteById(id);
-        return toDelete;
+    @Override
+    public UserView deleteUser(Long id) {
+        User user = userRepo.getById(id);
+
+        user.setUsername(user.getUsername().replace("@", String.format("_%s@", id)));
+        user.setActive(false);
+        userRepo.save(user);
+
+        return viewMapper.toUserView(user);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("User with ID=%s not found.", id));
-        });
+    public UserView getUserById(Long id) {
+        return viewMapper.toUserView(userRepo.getById(id));
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepo.findByUsername(username).orElseThrow(() -> {
-           throw new EntityNotFoundException(String.format("User with username '%s' not found.", username));
-        });
-    }
-
-    @Override
-    public Collection<User> getUsers() {
-        return userRepo.findAll();
+    public boolean usernameExists(String username) {
+        return userRepo.findByUsername(username).isPresent();
     }
 
     @Override
     public Long getUsersCount() {
         return userRepo.count();
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepo
+                .findByUsername(username)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException(String.format("User with username: %s not found.", username)
+                        ));
+    }
+
+    //TODO: impl list of users
+//    public List<UserView> searchUsers(Page page, SearchUsersQuery query) {
+//        List<User> users = userRepo.searchUsers(page, query);
+//        return userViewMapper.toUserView(users);
+//    }
 }

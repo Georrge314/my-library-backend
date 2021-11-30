@@ -1,21 +1,23 @@
 package com.bibliotek.service;
 
-import com.bibliotek.domain.model.Book;
+import com.bibliotek.domain.dto.book.BookView;
+import com.bibliotek.domain.dto.book.EditBookRequest;
 
-import java.util.Collection;
+
+import java.util.List;
 
 public interface BookService {
-    Book createBook(Book book);
+    BookView createBook(EditBookRequest request);
 
-    Book updateBook(Book book);
+    BookView updateBook(Long id, EditBookRequest request);
 
-    Book deleteBook(Long id);
+    BookView deleteBook(Long id);
 
-    Book getBookById(Long id);
+    BookView getBookById(Long id);
 
-    Book getBookByTitle(String title);
+    List<BookView> getBooksByIds(Iterable<Long> ids);
 
-    Collection<Book> getBooks();
+    List<BookView> getAuthorBooks(Long authorId);
 
     Long getBooksCount();
 }

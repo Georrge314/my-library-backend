@@ -1,57 +1,45 @@
 package com.bibliotek.web;
 
-import com.bibliotek.domain.exception.InvalidEntityException;
-import com.bibliotek.domain.model.Comment;
+import com.bibliotek.domain.dto.comment.CommentView;
+import com.bibliotek.domain.dto.comment.EditCommentRequest;
+import com.bibliotek.domain.model.Role;
+import com.bibliotek.service.BookService;
 import com.bibliotek.service.CommentService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.net.URI;
-import java.util.Collection;
+import javax.annotation.security.RolesAllowed;
 
 @RestController
-@RequestMapping("/api/comments")
+@RequestMapping("/api/comment")
 @CrossOrigin("http://localhost:3000")
-@Slf4j
 public class CommentController {
+    @Autowired
     private CommentService commentService;
 
-    @GetMapping
-    public Collection<Comment> getComments() {
-        return commentService.getComments();
+
+    @RolesAllowed(Role.COMMENT_ADMIN)
+    @PostMapping
+    public CommentView createComment(@RequestBody EditCommentRequest request) {
+        return commentService.createComment(request);
     }
 
-    @GetMapping("{id}")
-    public Comment getComments(@PathVariable Long id) {
-        return commentService.getCommentById(id);
+    @RolesAllowed(Role.COMMENT_ADMIN)
+    @PutMapping("{id}")
+    public CommentView editComment(@PathVariable Long id, @RequestBody EditCommentRequest request) {
+        return commentService.updateComment(id, request);
     }
 
+    @RolesAllowed(Role.COMMENT_ADMIN)
     @DeleteMapping("{id}")
-    public Comment deleteComment(@PathVariable Long id) {
+    public CommentView deleteComment(@PathVariable Long id) {
         return commentService.deleteComment(id);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody Comment comment) {
-        if (comment.getId() != id) {
-            throw new InvalidEntityException(
-                    String.format("Comment with ID=%s from path is different from Entity ID=%s", id, comment.getId()));
-        }
-        Comment updated = commentService.updateComment(comment);
-        log.info("Comment updated: {}...", comment.getContent().substring(0, 10));
-        return ResponseEntity.ok(updated);
+    @GetMapping("{id}")
+    public CommentView getComment(@PathVariable Long id) {
+        return commentService.getCommentById(id);
     }
 
-    @PostMapping
-    public ResponseEntity<Comment> createComment(@RequestBody Comment comment) {
-        System.out.println(comment);
-        Comment created = commentService.createComment(comment);
-        URI uri = MvcUriComponentsBuilder
-                .fromMethodName(CommentController.class, "createComment", Comment.class)
-                .pathSegment("{id}").buildAndExpand(created.getId()).toUri();
-        log.info("Comment created: {}...", created.getContent().substring(0, 10));
-        return ResponseEntity.created(uri).body(created);
-    }
+    //TODO impl search method
 }

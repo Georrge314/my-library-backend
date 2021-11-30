@@ -1,63 +1,83 @@
 package com.bibliotek.service.impl;
 
 import com.bibliotek.dao.AuthorRepo;
-import com.bibliotek.domain.exception.EntityNotFoundException;
-import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.dao.BookRepo;
+import com.bibliotek.domain.dto.author.AuthorView;
+import com.bibliotek.domain.dto.author.EditAuthorRequest;
+import com.bibliotek.domain.mapper.AuthorEditMapper;
+import com.bibliotek.domain.mapper.AuthorViewMapper;
 import com.bibliotek.domain.model.Author;
+import com.bibliotek.domain.model.Book;
 import com.bibliotek.service.AuthorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 @Slf4j
 public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private AuthorRepo authorRepo;
+    @Autowired
+    private BookRepo bookRepo;
+    @Autowired
+    private AuthorEditMapper editMapper;
+    @Autowired
+    private AuthorViewMapper viewMapper;
+
 
     @Override
-    public Author createAuthor(Author author) {
-        try {
-            getAuthorByFullName(author.getFullName());
-            throw new InvalidEntityException(String.format("Author with name: %s already exists.", author.getFullName()));
-        } catch (EntityNotFoundException exception) {
-            return authorRepo.save(author);
-        }
+    @Transactional
+    public AuthorView createAuthor(EditAuthorRequest request) {
+        Author author = editMapper.create(request);
+
+        author = authorRepo.save(author);
+
+        log.info("Author with name: {} created.", request.getFullName());
+        return viewMapper.toAuthorView(author);
     }
 
     @Override
-    public Author updateAuthor(Author author) {
-        //TODO: impl
-        return null;
+    @Transactional
+    public AuthorView updateAuthor(Long id, EditAuthorRequest request) {
+        Author author = authorRepo.getById(id);
+        editMapper.update(request, author);
+
+        author = authorRepo.save(author);
+        log.info("Author with ID={} updated.", author.getId());
+
+        return viewMapper.toAuthorView(author);
     }
 
     @Override
-    public Author deleteAuthor(Long id) {
-        Author deleted = getAuthorById(id);
-        authorRepo.deleteById(id);
-        return deleted;
+    @Transactional
+    public AuthorView deleteAuthor(Long id) {
+        Author author = authorRepo.getById(id);
+
+        authorRepo.delete(author);
+        bookRepo.deleteAll(bookRepo.findAllById(author.getBookIds()));
+
+        log.info("Author with ID={} deleted", author.getId());
+        return viewMapper.toAuthorView(author);
     }
 
     @Override
-    public Author getAuthorById(Long id) {
-        return authorRepo.findById(id).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("Author with ID=%s not found.", id));
-        });
+    public AuthorView getAuthorById(Long id) {
+        return viewMapper.toAuthorView(authorRepo.getById(id));
     }
 
     @Override
-    public Author getAuthorByFullName(String fullName) {
-        return authorRepo.findByFullName(fullName).orElseThrow(() -> {
-            throw new EntityNotFoundException(String.format("Author with name: %s not found", fullName));
-        });
+    public List<AuthorView> getAuthors(Iterable<Long> ids) {
+        return viewMapper.toAuthorView(authorRepo.findAllById(ids));
     }
 
-
     @Override
-    public Collection<Author> getAuthors() {
-        return authorRepo.findAll();
+    public List<AuthorView> getBookAuthors(Long bookId) {
+        Book book = bookRepo.getById(bookId);
+        return viewMapper.toAuthorView(authorRepo.findAllById(book.getAuthorIds()));
     }
 
     @Override

@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,42 +20,41 @@ import java.util.Set;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Author {
+public class Author implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
+    @Column
     private Long id;
-
-    @Length(min = 5, max = 50)
-    @NonNull
-    @NotNull
-    @Column(unique = true)
+    @Column(name = "full_name")
     private String fullName;
-
-    @Length(min = 3, max = 50)
-    @NonNull
-    @NotNull
-    private String country;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @NonNull
-    @NotNull
-    private LocalDate born;
-
+    @Column
+    private String nationality;
+    @Column(name = "image_url")
     private String imageUrl;
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String about;
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private Set<Genre> genres = new HashSet<>();
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate died;
-
+    @CreatedBy
+    @Column(name = "creator_id")
+    private Long creatorId;
+    @LastModifiedBy
+    @Column(name = "modifier_id")
+    private Long modifierId;
+    @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created = LocalDateTime.now();
-
+    @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modified = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
-    @ToString.Exclude
-    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "author_book",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
     private Set<Book> books = new HashSet<>();
 }
