@@ -1,5 +1,6 @@
 package com.bibliotek.domain.dto.book;
 
+import com.bibliotek.domain.dto.author.AuthorView;
 import com.bibliotek.domain.dto.comment.CommentView;
 import com.bibliotek.domain.dto.user.UserView;
 import lombok.Data;
@@ -13,8 +14,6 @@ import java.util.Set;
 public class BookView {
 
     private Long id;
-
-    private UserView creator;
 
     private LocalDateTime createdAt;
 
@@ -36,7 +35,9 @@ public class BookView {
 
     private String publisher;
 
-    private Double rating;
+    private UserView creator;
 
     private Set<CommentView> comments;
+
+    private Set<AuthorView> authors;
 }

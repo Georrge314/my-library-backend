@@ -13,12 +13,12 @@ public class CreateUserRequest {
     @Length(min = 5, max = 40)
     private String username;
 
-    @Email
     @NotBlank
-    @Length(min = 4, max = 40)
+    @Email
     private String email;
 
     @NotBlank
+    @Length(min = 5, max = 40)
     private String fullName;
 
     @NotBlank
@@ -26,6 +26,7 @@ public class CreateUserRequest {
     private String password;
 
     @NotBlank
+    @Length(min = 5, max = 40)
     private String rePassword;
 
     private Set<String> authorities;

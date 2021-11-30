@@ -1,4 +1,4 @@
-package com.bibliotek.web;
+package com.bibliotek.config.security;
 
 import com.bibliotek.domain.model.User;
 import lombok.AllArgsConstructor;

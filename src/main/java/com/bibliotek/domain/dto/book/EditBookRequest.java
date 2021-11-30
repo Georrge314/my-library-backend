@@ -1,20 +1,14 @@
 package com.bibliotek.domain.dto.book;
 
-import com.bibliotek.domain.dto.comment.CommentView;
-import com.bibliotek.domain.dto.user.UserView;
-import com.bibliotek.domain.model.Author;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
 @Data
 public class EditBookRequest {
-    private List<Author> authors;
-
     @NotNull
     private String title;
 
@@ -34,7 +28,7 @@ public class EditBookRequest {
 
     private String publisher;
 
-    private Double rating;
+    private Set<Long> commentIds;
 
-    private Set<CommentView> comments;
+    private List<Long> authorIds;
 }

@@ -6,11 +6,7 @@ import lombok.Data;
 public class CommentView {
     Long id;
 
-    UserView creator;
-
     String content;
 
-    Long likes;
-
-    Long dislikes;
+    UserView creator;
 }

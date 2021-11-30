@@ -1,6 +1,5 @@
 package com.bibliotek.domain.dto.author;
 
-import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.model.Genre;
 import lombok.Data;
 
@@ -21,5 +20,5 @@ public class EditAuthorRequest {
 
     private Set<Genre> genres;
 
-    private Set<BookView> books;
+    private Set<Long> bookIds;
 }
