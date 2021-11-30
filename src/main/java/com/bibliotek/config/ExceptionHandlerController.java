@@ -2,11 +2,11 @@ package com.bibliotek.config;
 
 import com.bibliotek.domain.exception.EntityNotFoundException;
 import com.bibliotek.domain.exception.InvalidEntityException;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -26,7 +26,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse<>(new Date(),"Entity not found exception", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>(new Date(), "Entity not found exception", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(InvalidEntityException.class)
@@ -57,19 +57,22 @@ public class ExceptionHandlerController {
                 .body(new ErrorResponse<>(new Date(), "Internal server error", List.of(ex.getMessage())));
     }
 
-//
-//    @ExceptionHandler({
-//            InvalidEntityException.class,
-//            ConstraintViolationException.class,
-//            HttpMessageConversionException.class})
-//    public ResponseEntity<ErrorResponse> handle(Exception ex){
-//        log.error(ex.getMessage());
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getClass().getSimpleName(), ex.getMessage()));
-//    }
-//
-//    @ExceptionHandler
-//    public ResponseEntity<String> handle(AccessDeniedException ex){
-//        log.error(ex.getMessage());
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-//    }
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse<String>> handleMissingServletRequestParameterException(HttpServletRequest request, MissingServletRequestParameterException ex) {
+        log.error("hanldeMissingServletRequestParameterException {}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse<>(new Date(), "Missing request parameter", List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler({ConstraintViolationException.class, HttpMessageConversionException.class})
+    public ResponseEntity<ErrorResponse<String>> handle(HttpServletRequest request, Exception ex) {
+        log.error("handle{} {}\n", ex.getClass().getSimpleName(), request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse<>(new Date(), ex.getClass().getSimpleName(), List.of(ex.getMessage())));
+    }
+
 }
