@@ -34,18 +34,19 @@ public class Author implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private Set<Genre> genres = new HashSet<>();
 
-    @CreatedBy
-    @Column(name = "creator_id")
-    private Long creatorId;
-    @LastModifiedBy
-    @Column(name = "modifier_id")
-    private Long modifierId;
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created = LocalDateTime.now();
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modified = LocalDateTime.now();
+
+    @CreatedBy
+    @ManyToOne
+    private User creator;
+    @LastModifiedBy
+    @ManyToOne
+    private User modifier;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

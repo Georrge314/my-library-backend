@@ -50,11 +50,11 @@ public class Book implements Serializable {
     private LocalDateTime modified = LocalDateTime.now();
 
     @CreatedBy
-    @Column(name = "creator_id")
-    private Long creatorId;
+    @ManyToOne
+    private User creator;
     @LastModifiedBy
-    @Column(name = "modifier_id")
-    private Long modifierId;
+    @ManyToOne
+    private Long modifier;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();

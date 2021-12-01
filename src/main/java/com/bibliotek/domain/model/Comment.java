@@ -23,16 +23,17 @@ public class Comment implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @CreatedBy
-    @Column(name = "creator_id")
-    private Long creatorId;
-    @LastModifiedBy
-    @Column(name = "modifier_id")
-    private Long modifierId;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime created = LocalDateTime.now();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modified = LocalDateTime.now();
+
+    @CreatedBy
+    @ManyToOne
+    private User creator;
+    @LastModifiedBy
+    @ManyToOne
+    private User modifier;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Book book;

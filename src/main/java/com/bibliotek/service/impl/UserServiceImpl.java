@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -68,9 +69,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return viewMapper.toUserView(user);
     }
 
+    @Transactional
     @Override
     public UserView upsert(CreateUserRequest request) {
-
+        Optional<User> optionalUser = userRepo.findByUsername(request.getUsername());
+        if (optionalUser.isEmpty()) {
+            return createUser(request);
+        }
+        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+        updateUserRequest.setUsername(request.getUsername());
+        updateUserRequest.setEmail(request.getEmail());
+        updateUserRequest.setFullName(request.getFullName());
+        return updateUser(optionalUser.get().getId(), updateUserRequest);
     }
 
     @Transactional
