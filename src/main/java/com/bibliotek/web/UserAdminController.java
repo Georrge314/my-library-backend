@@ -1,5 +1,6 @@
 package com.bibliotek.web;
 
+import com.bibliotek.domain.dto.ListResponse;
 import com.bibliotek.domain.dto.user.CreateUserRequest;
 import com.bibliotek.domain.dto.user.UpdateUserRequest;
 import com.bibliotek.domain.dto.user.UserView;
@@ -38,6 +39,4 @@ public class UserAdminController {
     public UserView updateUser(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest request) {
         return userService.updateUser(id, request);
     }
-
-    //TODO: impl search method that return list of users..
 }

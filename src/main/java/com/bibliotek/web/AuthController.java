@@ -35,7 +35,7 @@ public class AuthController {
     private UserViewMapper userViewMapper;
 
     @PostMapping("login")
-    public ResponseEntity<UserView> login(@RequestBody @Valid Credentials credentials) {
+    public ResponseEntity<UserView> login(@RequestBody @Valid Credentials credentials) { // username, password
         try {
             Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     credentials.getUsername(), credentials.getPassword()));
@@ -43,19 +43,11 @@ public class AuthController {
             User user = (User) authenticate.getPrincipal();
             log.info("Login successful for: {}", user.getUsername());
             return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateToken(user))
+                    .header(HttpHeaders.AUTHORIZATION, jwtUtil.generateAccessToken(user))
                     .body(userViewMapper.toUserView(user));
         } catch (BadCredentialsException exception) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
-//        User user = userService.getUserByUsername(credentials.getUsername());
-//        String token = jwtUtil.generateToken(user);
-//        log.info("Login successful for {}: {}", user.getUsername(), token);
-//        return ResponseEntity.ok(new JwtResponse(token, user));
     }
 
     @PostMapping("register")

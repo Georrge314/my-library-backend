@@ -12,6 +12,8 @@ public interface UserService {
 
     UserView updateUser(Long id, UpdateUserRequest request);
 
+    UserView upsert(CreateUserRequest request);
+
     UserView deleteUser(Long id);
 
     UserView getUserById(Long id);

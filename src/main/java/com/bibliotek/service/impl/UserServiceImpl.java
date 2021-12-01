@@ -68,6 +68,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return viewMapper.toUserView(user);
     }
 
+    @Override
+    public UserView upsert(CreateUserRequest request) {
+
+    }
+
     @Transactional
     @Override
     public UserView deleteUser(Long id) {

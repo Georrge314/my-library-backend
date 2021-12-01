@@ -1,20 +1,20 @@
 package com.bibliotek.config.security;
 
-import com.bibliotek.domain.exception.EntityNotFoundException;
-import com.bibliotek.service.UserService;
+import com.bibliotek.dao.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +38,22 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Autowired
-    private JwtTokenFilter jwtRequestFilter;
+    private JwtTokenFilter jwtTokenFilter;
+
+    @Autowired
+    private UserRepo userRepo;
+
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(username ->
+                userRepo.findByUsername(username)
+                        .orElseThrow(
+                                () -> new UsernameNotFoundException(
+                                        String.format("User: %s, not found", username)))
+        );
+    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -52,6 +67,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
+                            log.error("Unauthorized request - {}", ex.getMessage());
                             response.sendError(
                                     HttpServletResponse.SC_UNAUTHORIZED,
                                     ex.getMessage()
@@ -60,42 +76,29 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 ).and();
 
         http.authorizeRequests()
-                //public
+                //swagger, actuator endpoints
                 .antMatchers("/").permitAll()
-                .antMatchers("/api").permitAll()
-                .antMatchers("/api/login").permitAll()
                 .antMatchers("/actuator/info").permitAll()
                 .antMatchers("/actuator/health").permitAll()
-                .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers(HttpMethod.GET, "/api/books").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/books/{id}").permitAll()
-                //require authentication
-                    //users
-                .antMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/api/users/{id}").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.PUT, "/api/users/{id}").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, "/api/users").hasAnyRole("ADMIN", "USER")
-                    //books
-                .antMatchers(HttpMethod.POST, "/api/books").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/api/books/{id}").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/api/books/{id}").hasRole("ADMIN")
+                .antMatchers(AUTH_WHITELIST).permitAll() // swagger endpoints
+                //public
+                .antMatchers("/api/public/**").permitAll() //login and register
+                .antMatchers(HttpMethod.GET, "/api/author/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/author/search").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/book/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/book/search").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/comment/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/comment/search").permitAll()
+                //private
                 .anyRequest().authenticated();
 
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
+
     @Bean
-    public UserDetailsService userDetailsService(UserService userService) {
-        return username -> {
-            try {
-                UserDetails found = userService.getUserByUsername(username);
-                log.debug("User authenticated for username: {} is {}", username, found);
-                return found;
-            } catch (EntityNotFoundException ex) {
-                throw new UsernameNotFoundException(ex.getMessage(), ex);
-            }
-        };
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
