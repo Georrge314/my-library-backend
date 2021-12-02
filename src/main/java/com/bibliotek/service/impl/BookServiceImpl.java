@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -44,9 +45,10 @@ public class BookServiceImpl implements BookService {
     }
 
     private void updateAuthors(Book book) {
-        List<Author> authors = authorRepo.findAllById(book.getAuthorIds());
+        List<Author> authors = authorRepo.findAllById(
+                book.getAuthors().stream().map(Author::getId).collect(Collectors.toList()));
         authors.forEach(author -> {
-            author.getBookIds().add(book.getId());
+            author.getBooks().add(book);
             log.info("Book {} added to author {}.", book.getTitle(), author.getFullName());
         });
         authorRepo.saveAll(authors);
@@ -60,7 +62,7 @@ public class BookServiceImpl implements BookService {
 
         book = bookRepo.save(book);
         log.info("Book with ID={} updated.", id);
-        if (!CollectionUtils.isEmpty(request.getAuthors())) {
+        if (!CollectionUtils.isEmpty(request.getAuthorIds())) {
             updateAuthors(book);
         }
 
@@ -91,7 +93,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookView> getAuthorBooks(Long authorId) {
         Author author = authorRepo.getById(authorId);
-        return viewMapper.toBookView(bookRepo.findAllById(author.getBookIds()));
+        return viewMapper.toBookView(bookRepo.findAllById(author.getBooks()
+                .stream().map(Book::getId).collect(Collectors.toList())));
     }
 
     @Override

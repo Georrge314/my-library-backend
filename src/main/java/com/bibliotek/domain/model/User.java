@@ -17,7 +17,6 @@ import java.util.*;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
     @Id
@@ -32,6 +31,7 @@ public class User implements UserDetails {
     private String email;
     @Column(name = "full_name")
     private String fullName;
+    @ElementCollection
     private Set<Role> authorities = new HashSet<>();
     @Column(name = "image_url")
     private String imageUrl;

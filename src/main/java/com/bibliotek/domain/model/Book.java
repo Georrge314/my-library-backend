@@ -16,7 +16,6 @@ import java.util.Set;
 @Table(name = "books")
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 public class Book implements Serializable {
     @Id
@@ -30,7 +29,7 @@ public class Book implements Serializable {
     @Column
     private String language;
     @Column
-    @Enumerated(value = EnumType.STRING)
+    @ElementCollection
     private Set<Genre> genres = new HashSet<>();
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "published_date")
@@ -54,7 +53,7 @@ public class Book implements Serializable {
     private User creator;
     @LastModifiedBy
     @ManyToOne
-    private Long modifier;
+    private User modifier;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();

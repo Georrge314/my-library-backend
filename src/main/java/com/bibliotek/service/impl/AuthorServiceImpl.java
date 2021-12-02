@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -58,7 +59,8 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = authorRepo.getById(id);
 
         authorRepo.delete(author);
-        bookRepo.deleteAll(bookRepo.findAllById(author.getBookIds()));
+        bookRepo.deleteAll(bookRepo.findAllById(author.getBooks()
+                .stream().map(Book::getId).collect(Collectors.toList())));
 
         log.info("Author with ID={} deleted", author.getId());
         return viewMapper.toAuthorView(author);
@@ -77,7 +79,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<AuthorView> getBookAuthors(Long bookId) {
         Book book = bookRepo.getById(bookId);
-        return viewMapper.toAuthorView(authorRepo.findAllById(book.getAuthorIds()));
+        return viewMapper.toAuthorView(authorRepo.findAllById(book.getAuthors()
+                .stream().map(Author::getId).collect(Collectors.toList())));
     }
 
     @Override

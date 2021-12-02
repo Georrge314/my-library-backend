@@ -20,6 +20,6 @@ public abstract class CommentViewMapper {
 
     @AfterMapping
     protected void after(Comment comment, @MappingTarget CommentView commentView) {
-        commentView.setCreator(userViewMapper.toUserViewById(comment.getCreatorId()));
+        commentView.setCreator(userViewMapper.toUserViewById(comment.getCreator().getId()));
     }
 }

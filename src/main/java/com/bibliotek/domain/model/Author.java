@@ -15,7 +15,6 @@ import java.util.Set;
 @Table(name = "authors")
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
 @NoArgsConstructor
 public class Author implements Serializable {
     @Id
@@ -31,7 +30,7 @@ public class Author implements Serializable {
     @Column(columnDefinition = "MEDIUMTEXT")
     private String about;
     @Column
-    @Enumerated(value = EnumType.STRING)
+    @ElementCollection
     private Set<Genre> genres = new HashSet<>();
 
     @Column

@@ -20,6 +20,6 @@ public abstract class AuthorViewMapper {
 
     @AfterMapping
     public void after(Author author, @MappingTarget AuthorView authorView) {
-        authorView.setCreator(userViewMapper.toUserViewById(author.getCreatorId()));
+        authorView.setCreator(userViewMapper.toUserViewById(author.getCreator().getId()));
     }
 }

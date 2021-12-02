@@ -18,6 +18,6 @@ public abstract class BookViewMapper {
 
     @AfterMapping
     protected void after(Book book, @MappingTarget BookView bookView) {
-        bookView.setCreator(userViewMapper.toUserViewById(book.getCreatorId()));
+        bookView.setCreator(userViewMapper.toUserViewById(book.getCreator().getId()));
     }
 }

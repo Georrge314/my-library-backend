@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
 @NoArgsConstructor
 public class Comment implements Serializable {
     @Id
