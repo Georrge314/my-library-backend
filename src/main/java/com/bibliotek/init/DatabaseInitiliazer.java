@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -56,7 +59,11 @@ public class DatabaseInitiliazer implements CommandLineRunner {
             request.setFullName(fullNames.get(i));
             request.setPassword(password);
             request.setRePassword(password);
-            request.setAuthorities(Set.of(roles.get(i)));
+            if (i == 0) {
+                request.setAuthorities(new HashSet<>(roles));
+            } else {
+                request.setAuthorities(Set.of(roles.get(i)));
+            }
 
             userService.upsert(request);
         }

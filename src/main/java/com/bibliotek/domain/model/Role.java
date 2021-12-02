@@ -5,9 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.Embeddable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Embeddable
 public class Role implements GrantedAuthority {
     public static final String USER_ADMIN = "USER_ADMIN";
     public static final String AUTHOR_ADMIN = "AUTHOR_ADMIN";

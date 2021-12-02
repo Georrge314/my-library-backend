@@ -36,7 +36,9 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookView createBook(EditBookRequest request) {
+        System.out.println(request);
         Book book = editMapper.create(request);
+        System.out.println(book);
         book = bookRepo.save(book);
         updateAuthors(book);
 

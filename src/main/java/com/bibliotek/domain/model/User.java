@@ -1,15 +1,11 @@
 package com.bibliotek.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.hibernate.validator.constraints.Length;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -18,6 +14,7 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +28,10 @@ public class User implements UserDetails {
     private String email;
     @Column(name = "full_name")
     private String fullName;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"))
     private Set<Role> authorities = new HashSet<>();
     @Column(name = "image_url")
     private String imageUrl;
@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modified = LocalDateTime.now();
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_book",
             joinColumns = @JoinColumn(name = "user_id"),
