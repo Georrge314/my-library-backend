@@ -9,6 +9,7 @@ import com.bibliotek.domain.mapper.UserEditMapper;
 import com.bibliotek.domain.mapper.UserViewMapper;
 import com.bibliotek.domain.model.User;
 import com.bibliotek.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,15 +24,16 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private UserRepo userRepo;
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private UserViewMapper viewMapper;
     @Autowired
     private UserEditMapper editMapper;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
 
     @Transactional

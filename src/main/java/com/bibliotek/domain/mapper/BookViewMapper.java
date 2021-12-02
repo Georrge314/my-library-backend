@@ -3,11 +3,13 @@ package com.bibliotek.domain.mapper;
 import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.model.Book;
 import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+@Mapper(componentModel = "spring")
 public abstract class BookViewMapper {
     @Autowired
     private UserViewMapper userViewMapper;
