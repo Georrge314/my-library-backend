@@ -37,10 +37,10 @@ public class User implements UserDetails {
     private String imageUrl;
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime modified = LocalDateTime.now();
+    private LocalDateTime modifiedAt = LocalDateTime.now();
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_book",

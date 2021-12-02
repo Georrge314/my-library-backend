@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
+import javax.validation.ValidationException;
 import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +37,15 @@ public class ExceptionHandlerController {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse<>(new Date(), "Invalid entity exception", List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse<String>> handleValidationException(HttpServletRequest request, ValidationException ex) {
+        log.error("ValidationException {}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse<>(new Date(),"Validation exception", List.of(ex.getMessage())));
     }
 
 
