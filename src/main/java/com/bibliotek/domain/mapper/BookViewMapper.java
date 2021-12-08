@@ -9,10 +9,7 @@ import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Mapper(componentModel = "spring")
 public abstract class BookViewMapper {
@@ -29,7 +26,13 @@ public abstract class BookViewMapper {
 
     @AfterMapping
     protected void after(Book book, @MappingTarget BookView bookView) {
-        bookView.setCreator(userViewMapper.toUserViewById(book.getCreator().getId()));
+
+        try {
+            bookView.setCreator(userViewMapper.toUserViewById(book.getCreator().getId()));
+        } catch (NoSuchElementException | NullPointerException exception) {
+            bookView.setCreator(null);
+        }
+
         if (!CollectionUtils.isEmpty(book.getAuthors())) {
             bookView.setAuthors(new HashSet<>(authorViewMapper.toAuthorView(book.getAuthors())));
         }

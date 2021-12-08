@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +34,7 @@ public class Book implements Serializable {
     private String language;
     @Column
     @ElementCollection
+    @Enumerated(EnumType.STRING)
     private Set<Genre> genres = new HashSet<>();
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "published_date")
@@ -51,9 +53,11 @@ public class Book implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime modifiedAt = LocalDateTime.now();
 
+    @Nullable
     @CreatedBy
     @ManyToOne
     private User creator;
+    @Nullable
     @LastModifiedBy
     @ManyToOne
     private User modifier;

@@ -1,5 +1,6 @@
 package com.bibliotek.domain.dto.book;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@AllArgsConstructor
 public class EditBookRequest {
     @NotNull
     private String title;
@@ -16,7 +18,7 @@ public class EditBookRequest {
 
     private String language;
 
-    private List<String> genres;
+    private Set<String> genres;
 
     private LocalDate publishedDate;
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Mapper(componentModel = "spring")
@@ -24,6 +25,10 @@ public abstract class AuthorViewMapper {
 
     @AfterMapping
     public void after(Author author, @MappingTarget AuthorView authorView) {
-        authorView.setCreator(userViewMapper.toUserViewById(author.getCreator().getId()));
+        try {
+            authorView.setCreator(userViewMapper.toUserViewById(author.getCreator().getId()));
+        } catch (NoSuchElementException | NullPointerException exception) {
+            author.setCreator(null);
+        }
     }
 }

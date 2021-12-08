@@ -15,6 +15,7 @@ public enum Genre {
     CRAFTS_HOBBIES,
     CLASSIC,
     COOKBOOK,
+    TRAGEDY,
     COMIC_BOOK,
     DIARY,
     COMING_OF_AGE,
