@@ -43,7 +43,8 @@ public class CommentServiceImpl implements CommentService {
         bookRepo.save(book);
         commentRepo.save(comment);
 
-        log.info("Comment with content: {}... created.", request.getContent().substring(0, 10));
+        int contentLenght = comment.getContent().length();
+        log.info("Comment with content: {}... created.", comment.getContent().substring(0, contentLenght));
         return viewMapper.toCommentView(comment);
     }
 

@@ -16,6 +16,4 @@ public class UserView {
     private String fullName;
 
     private String imageUrl;
-
-    private Set<BookView> books;
 }

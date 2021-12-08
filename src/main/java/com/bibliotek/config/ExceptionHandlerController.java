@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,9 +40,18 @@ public class ExceptionHandlerController {
                 .body(new ErrorResponse<>(new Date(), "Invalid entity exception", List.of(ex.getMessage())));
     }
 
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse<String>> handleHttpRequestMethodNotSupportedException(HttpServletRequest request, HttpRequestMethodNotSupportedException ex) {
+        log.error("handleHttpRequestMethodNotSupportedException {}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse<>(new Date(), "HttpRequest method not supported exception", List.of(ex.getMessage())));
+    }
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorResponse<String>> handleValidationException(HttpServletRequest request, ValidationException ex) {
-        log.error("ValidationException {}\n", request.getRequestURI(), ex);
+        log.error("handleValidationException {}\n", request.getRequestURI(), ex);
 
         return ResponseEntity
                 .badRequest()
