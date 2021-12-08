@@ -1,6 +1,5 @@
 package com.bibliotek.config;
 
-import com.bibliotek.domain.exception.EntityNotFoundException;
 import com.bibliotek.domain.exception.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
@@ -17,7 +17,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.Date;
 import java.util.List;
 
-@ControllerAdvice("com.bibliotek.config")
+@ControllerAdvice()
 @Slf4j
 public class ExceptionHandlerController {
 

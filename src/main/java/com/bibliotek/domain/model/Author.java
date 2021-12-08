@@ -49,11 +49,6 @@ public class Author implements Serializable {
     @ManyToOne
     private User modifier;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "author_book",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
+    @ManyToMany(mappedBy = "authors", fetch = FetchType.LAZY)
     private Set<Book> books = new HashSet<>();
 }

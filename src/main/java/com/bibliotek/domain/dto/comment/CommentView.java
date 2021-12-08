@@ -2,11 +2,15 @@ package com.bibliotek.domain.dto.comment;
 import com.bibliotek.domain.dto.user.UserView;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class CommentView {
-    Long id;
+    private Long id;
 
-    String content;
+    private String content;
 
-    UserView creator;
+    private UserView creator;
+
+    private LocalDateTime createdAt;
 }

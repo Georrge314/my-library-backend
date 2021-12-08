@@ -35,12 +35,18 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentView createComment(EditCommentRequest request) {
         Comment comment = editMapper.create(request);
-        updateBook(comment);
+        Book book = bookRepo.getById(request.getBookId());
 
+        comment.setBook(book);
+        book.getComments().add(comment);
+
+        bookRepo.save(book);
         commentRepo.save(comment);
+
         log.info("Comment with content: {}... created.", request.getContent().substring(0, 10));
         return viewMapper.toCommentView(comment);
     }
+
 
     @Override
     @Transactional
@@ -68,16 +74,15 @@ public class CommentServiceImpl implements CommentService {
         return viewMapper.toCommentView(commentRepo.getById(id));
     }
 
-    @Override
-    public List<CommentView> getComments(Iterable<Long> ids) {
-        return viewMapper.toCommentView(commentRepo.findAllById(ids));
-    }
+//    @Override
+//    public List<CommentView> getComments(Iterable<Long> ids) {
+//        return viewMapper.toCommentView(commentRepo.findAllById(ids));
+//    }
 
     @Override
     public List<CommentView> getBookComments(Long bookId) {
-        //TODO to impl better way
         Book book = bookRepo.getById(bookId);
-        return viewMapper.toCommentView(new ArrayList<>(book.getComments()));
+        return viewMapper.toCommentView(book.getComments());
     }
 
     @Override

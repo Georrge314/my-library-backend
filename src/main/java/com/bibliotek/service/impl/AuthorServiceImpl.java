@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +31,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private AuthorViewMapper viewMapper;
 
-
     @Override
     @Transactional
     public AuthorView createAuthor(EditAuthorRequest request) {
@@ -40,6 +41,7 @@ public class AuthorServiceImpl implements AuthorService {
         log.info("Author with name: {} created.", request.getFullName());
         return viewMapper.toAuthorView(author);
     }
+
 
     @Override
     @Transactional
@@ -68,19 +70,20 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorView getAuthorById(Long id) {
-        return viewMapper.toAuthorView(authorRepo.getById(id));
+        Author author = authorRepo.getById(id);
+        return viewMapper.toAuthorView(author);
     }
 
-    @Override
-    public List<AuthorView> getAuthors(Iterable<Long> ids) {
-        return viewMapper.toAuthorView(authorRepo.findAllById(ids));
-    }
+//    @Override
+//    public List<AuthorView> getAuthors(Iterable<Long> ids) {
+//        return viewMapper.toAuthorView(authorRepo.findAllById(ids));
+//    }
 
     @Override
     public List<AuthorView> getBookAuthors(Long bookId) {
         Book book = bookRepo.getById(bookId);
-        return viewMapper.toAuthorView(authorRepo.findAllById(book.getAuthors()
-                .stream().map(Author::getId).collect(Collectors.toList())));
+        Set<Author> authors = book.getAuthors();
+        return viewMapper.toAuthorView(authors);
     }
 
     @Override

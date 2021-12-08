@@ -1,6 +1,6 @@
 package com.bibliotek.domain.dto.user;
 
-import com.bibliotek.domain.dto.book.BookSlim;
+import com.bibliotek.domain.dto.book.BookView;
 import lombok.Data;
 
 import java.util.Set;
@@ -17,5 +17,5 @@ public class UserView {
 
     private String imageUrl;
 
-    private Set<BookSlim> books;
+    private Set<BookView> books;
 }

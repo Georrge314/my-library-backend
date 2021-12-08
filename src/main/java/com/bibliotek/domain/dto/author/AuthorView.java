@@ -1,6 +1,5 @@
 package com.bibliotek.domain.dto.author;
 
-import com.bibliotek.domain.dto.book.BookSlim;
 import com.bibliotek.domain.dto.user.UserView;
 import com.bibliotek.domain.model.Genre;
 import lombok.Data;
@@ -22,6 +21,4 @@ public class AuthorView {
     private String about;
 
     private Set<Genre> genres;
-
-    private Set<BookSlim> books;
 }

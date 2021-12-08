@@ -28,7 +28,5 @@ public class EditBookRequest {
 
     private String publisher;
 
-    private Set<Long> commentIds;
-
     private List<Long> authorIds;
 }

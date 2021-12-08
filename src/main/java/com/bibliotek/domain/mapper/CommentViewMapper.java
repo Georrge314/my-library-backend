@@ -7,7 +7,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public abstract class CommentViewMapper {
@@ -16,7 +18,7 @@ public abstract class CommentViewMapper {
 
     public abstract CommentView toCommentView(Comment comment);
 
-    public abstract List<CommentView> toCommentView(List<Comment> comments);
+    public abstract List<CommentView> toCommentView(Set<Comment> comments);
 
     @AfterMapping
     protected void after(Comment comment, @MappingTarget CommentView commentView) {

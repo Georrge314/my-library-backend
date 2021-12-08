@@ -1,6 +1,7 @@
 package com.bibliotek.web;
 
 import com.bibliotek.domain.dto.ListResponse;
+import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.dto.user.CreateUserRequest;
 import com.bibliotek.domain.dto.user.UpdateUserRequest;
 import com.bibliotek.domain.dto.user.UserView;
@@ -38,5 +39,10 @@ public class UserAdminController {
     @PutMapping("{id}")
     public UserView updateUser(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest request) {
         return userService.updateUser(id, request);
+    }
+
+    @GetMapping("{id}/book")
+    public ListResponse<BookView> getBooks(@PathVariable Long id) {
+        return new ListResponse<>(userService.getUserBooks(id));
     }
 }

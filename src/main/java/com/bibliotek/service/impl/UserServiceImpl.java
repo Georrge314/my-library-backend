@@ -1,12 +1,15 @@
 package com.bibliotek.service.impl;
 
 import com.bibliotek.dao.UserRepo;
+import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.dto.user.CreateUserRequest;
 import com.bibliotek.domain.dto.user.UpdateUserRequest;
 import com.bibliotek.domain.dto.user.UserView;
 import com.bibliotek.domain.exception.InvalidEntityException;
+import com.bibliotek.domain.mapper.BookViewMapper;
 import com.bibliotek.domain.mapper.UserEditMapper;
 import com.bibliotek.domain.mapper.UserViewMapper;
+import com.bibliotek.domain.model.Book;
 import com.bibliotek.domain.model.User;
 import com.bibliotek.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -34,6 +36,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserViewMapper viewMapper;
     @Autowired
     private UserEditMapper editMapper;
+    @Autowired
+    private BookViewMapper bookViewMapper;
 
 
     @Transactional
@@ -94,6 +98,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setActive(false);
         userRepo.save(user);
 
+        log.info("User with ID={} was deactiveted", id);
         return viewMapper.toUserView(user);
     }
 
@@ -110,6 +115,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Long getUsersCount() {
         return userRepo.count();
+    }
+
+    @Override
+    public List<BookView> getUserBooks(Long id) {
+        Set<Book> books = userRepo.getById(id).getBooks();
+        return bookViewMapper.toBookView(books);
     }
 
     @Override

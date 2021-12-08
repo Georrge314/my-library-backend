@@ -7,7 +7,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public abstract class AuthorViewMapper {
@@ -15,6 +17,8 @@ public abstract class AuthorViewMapper {
     private UserViewMapper userViewMapper;
 
     public abstract AuthorView toAuthorView(Author author);
+
+    public abstract List<AuthorView> toAuthorView(Set<Author> authors);
 
     public abstract List<AuthorView> toAuthorView(List<Author> authors);
 

@@ -15,7 +15,7 @@ public interface BookService {
 
     BookView getBookById(Long id);
 
-    List<BookView> getBooksByIds(Iterable<Long> ids);
+//    List<BookView> getBooksByIds(Iterable<Long> ids);
 
     List<BookView> getAuthorBooks(Long authorId);
 

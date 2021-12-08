@@ -19,6 +19,4 @@ public class EditAuthorRequest {
     private String about;
 
     private Set<Genre> genres;
-
-    private Set<Long> bookIds;
 }

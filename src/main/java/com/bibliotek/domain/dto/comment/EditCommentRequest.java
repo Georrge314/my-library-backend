@@ -9,5 +9,7 @@ import javax.validation.constraints.NotNull;
 public class EditCommentRequest {
     @NotBlank
     @NotNull
-    String content;
+    private String content;
+
+    private Long bookId;
 }

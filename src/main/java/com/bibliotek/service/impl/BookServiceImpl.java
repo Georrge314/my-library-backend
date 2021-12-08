@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,25 +38,17 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookView createBook(EditBookRequest request) {
-        System.out.println(request);
         Book book = editMapper.create(request);
-        System.out.println(book);
-        book = bookRepo.save(book);
-        updateAuthors(book);
 
+        if (!CollectionUtils.isEmpty(request.getAuthorIds())) {
+            book.setAuthors(new HashSet<>(authorRepo.findAllById(request.getAuthorIds())));
+        }
+
+        book = bookRepo.save(book);
         log.info("Book with title: {} created.", book.getTitle());
         return viewMapper.toBookView(book);
     }
 
-    private void updateAuthors(Book book) {
-        List<Author> authors = authorRepo.findAllById(
-                book.getAuthors().stream().map(Author::getId).collect(Collectors.toList()));
-        authors.forEach(author -> {
-            author.getBooks().add(book);
-            log.info("Book {} added to author {}.", book.getTitle(), author.getFullName());
-        });
-        authorRepo.saveAll(authors);
-    }
 
     @Override
     @Transactional
@@ -62,12 +56,12 @@ public class BookServiceImpl implements BookService {
         Book book = bookRepo.getById(id);
         editMapper.update(request, book);
 
-        book = bookRepo.save(book);
-        log.info("Book with ID={} updated.", id);
         if (!CollectionUtils.isEmpty(request.getAuthorIds())) {
-            updateAuthors(book);
+            book.setAuthors(new HashSet<>(authorRepo.findAllById(request.getAuthorIds())));
         }
 
+        book = bookRepo.save(book);
+        log.info("Book with ID={} updated.", id);
         return viewMapper.toBookView(book);
     }
 
@@ -86,17 +80,17 @@ public class BookServiceImpl implements BookService {
         return viewMapper.toBookView(book);
     }
 
-    @Override
-    public List<BookView> getBooksByIds(Iterable<Long> ids) {
-        List<Book> books = bookRepo.findAllById(ids);
-        return viewMapper.toBookView(books);
-    }
+//    @Override
+//    public List<BookView> getBooksByIds(Iterable<Long> ids) {
+//        Set<Book> books = bookRepo.findAllById(ids);
+//        return viewMapper.toBookView(books);
+//    }
 
     @Override
     public List<BookView> getAuthorBooks(Long authorId) {
         Author author = authorRepo.getById(authorId);
-        return viewMapper.toBookView(bookRepo.findAllById(author.getBooks()
-                .stream().map(Book::getId).collect(Collectors.toList())));
+        Set<Book> books = author.getBooks();
+        return viewMapper.toBookView(books);
     }
 
     @Override
