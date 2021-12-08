@@ -87,6 +87,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public Long getAuthorId(String fullName) {
+        return authorRepo.findByFullName(fullName).get().getId();
+    }
+
+    @Override
     public Long getAuthorsCount() {
         return authorRepo.count();
     }
