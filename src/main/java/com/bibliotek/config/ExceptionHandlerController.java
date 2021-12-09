@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,8 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import javax.validation.ValidationException;
 import java.nio.file.AccessDeniedException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @ControllerAdvice()
 @Slf4j
@@ -56,6 +56,28 @@ public class ExceptionHandlerController {
         return ResponseEntity
                 .badRequest()
                 .body(new ErrorResponse<>(new Date(),"Validation exception", List.of(ex.getMessage())));
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse<Map<String, String>>> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
+        log.error("handleMethodArgumentNotValidException {}\n", request.getRequestURI(), ex);
+
+        List<Map<String, String>> details = new ArrayList<>();
+        ex.getBindingResult()
+                .getFieldErrors()
+                .forEach(fieldError -> {
+                    Map<String, String> detail = new HashMap<>();
+                    detail.put("objectName", fieldError.getObjectName());
+                    detail.put("field", fieldError.getField());
+                    detail.put("rejectedValue", "" + fieldError.getRejectedValue());
+                    detail.put("errorMessage", fieldError.getDefaultMessage());
+                    details.add(detail);
+                });
+
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse<>(new Date(),"Method argument validation failed", details));
     }
 
 
