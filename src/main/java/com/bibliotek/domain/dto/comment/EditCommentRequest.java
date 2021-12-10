@@ -11,5 +11,6 @@ public class EditCommentRequest {
     @NotNull
     private String content;
 
+    @NotNull
     private Long bookId;
 }
