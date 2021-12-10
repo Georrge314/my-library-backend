@@ -5,6 +5,7 @@ import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.dto.user.CreateUserRequest;
 import com.bibliotek.domain.dto.user.UpdateUserRequest;
 import com.bibliotek.domain.dto.user.UserView;
+import com.bibliotek.domain.exception.EntityNotFoundException;
 import com.bibliotek.domain.exception.InvalidEntityException;
 import com.bibliotek.domain.mapper.BookViewMapper;
 import com.bibliotek.domain.mapper.UserEditMapper;
@@ -104,7 +105,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserView getUserById(Long id) {
-        return viewMapper.toUserView(userRepo.getById(id));
+        User user = userRepo.getById(id);
+        if (!user.isActive()) {
+            throw new EntityNotFoundException(String.format("User with ID=%s is not active", id));
+        }
+        return viewMapper.toUserView(user);
     }
 
     @Override
