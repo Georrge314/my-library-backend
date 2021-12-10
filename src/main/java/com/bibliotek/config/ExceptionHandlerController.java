@@ -22,8 +22,9 @@ import java.util.*;
 @Slf4j
 public class ExceptionHandlerController {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse<String>> handleNotFoundException(HttpServletRequest request, EntityNotFoundException ex) {
+    @ExceptionHandler(
+            {EntityNotFoundException.class, com.bibliotek.domain.exception.EntityNotFoundException.class})
+    public ResponseEntity<ErrorResponse<String>> handleNotFoundException(HttpServletRequest request, Exception ex) {
         log.error("handleNotFoundException {}\n", request.getRequestURI(), ex);
 
         return ResponseEntity
