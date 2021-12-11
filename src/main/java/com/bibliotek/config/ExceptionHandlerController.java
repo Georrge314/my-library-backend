@@ -29,7 +29,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse<>(new Date(), "Entity not found exception", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>( "Entity not found exception", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(InvalidEntityException.class)
@@ -38,7 +38,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse<>(new Date(), "Invalid entity exception", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>( "Invalid entity exception", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -47,7 +47,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorResponse<>(new Date(), "HttpRequest method not supported exception", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>( "HttpRequest method not supported exception", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(ValidationException.class)
@@ -56,7 +56,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorResponse<>(new Date(),"Validation exception", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>("Validation exception", List.of(ex.getMessage())));
     }
 
 
@@ -78,7 +78,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorResponse<>(new Date(),"Method argument validation failed", details));
+                .body(new ErrorResponse<>("Method argument validation failed", details));
     }
 
 
@@ -88,7 +88,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new ErrorResponse<>(new Date(), "Access denied", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>( "Access denied", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(Exception.class)
@@ -97,7 +97,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse<>(new Date(), "Internal server error", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>( "Internal server error", List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -106,7 +106,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse<>(new Date(), "Missing request parameter", List.of(ex.getMessage())));
+                .body(new ErrorResponse<>( "Missing request parameter", ex.getMessage() != null ? List.of(ex.getMessage()) : null));
     }
 
     @ExceptionHandler({ConstraintViolationException.class, HttpMessageConversionException.class})
@@ -115,7 +115,7 @@ public class ExceptionHandlerController {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse<>(new Date(), ex.getClass().getSimpleName(), List.of(ex.getMessage())));
+                .body(new ErrorResponse<>( ex.getClass().getSimpleName(), List.of(ex.getMessage())));
     }
 
 }
