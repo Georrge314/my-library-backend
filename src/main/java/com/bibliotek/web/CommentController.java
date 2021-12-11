@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -20,13 +21,13 @@ public class CommentController {
 
     @RolesAllowed(Role.COMMENT_ADMIN)
     @PostMapping
-    public CommentView createComment(@RequestBody EditCommentRequest request) {
+    public CommentView createComment(@RequestBody @Valid EditCommentRequest request) {
         return commentService.createComment(request);
     }
 
     @RolesAllowed(Role.COMMENT_ADMIN)
     @PutMapping("{id}")
-    public CommentView editComment(@PathVariable Long id, @RequestBody EditCommentRequest request) {
+    public CommentView editComment(@PathVariable Long id, @RequestBody @Valid EditCommentRequest request) {
         return commentService.updateComment(id, request);
     }
 

@@ -2,6 +2,7 @@ package com.bibliotek.config;
 
 import com.bibliotek.domain.exception.InvalidEntityException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
@@ -59,6 +60,15 @@ public class ExceptionHandlerController {
                 .body(new ErrorResponse<>("Validation exception", List.of(ex.getMessage())));
     }
 
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<ErrorResponse<String>> handleInvalidDataAccessApiUsageException(HttpServletRequest request, InvalidDataAccessApiUsageException ex) {
+        log.error("handleInvalidDataAccessApiUsageException {}\n", request.getRequestURI(), ex);
+
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse<>("The given id must not be null!", ex.getMessage() != null ? List.of(ex.getMessage()) : null));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse<Map<String, String>>> handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
