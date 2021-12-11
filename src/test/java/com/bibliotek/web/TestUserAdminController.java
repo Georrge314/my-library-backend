@@ -98,7 +98,7 @@ class TestUserAdminController {
     public void testCreatePasswordsMismatch() throws Exception {
         CreateUserRequest badRequest = new CreateUserRequest();
         badRequest.setUsername(String.format("validUser%s@bs.io", System.currentTimeMillis()));
-        badRequest.setEmail("valid@emal@gmai.com");
+        badRequest.setEmail("validemal@gmai.com");
         badRequest.setFullName("Test User");
         badRequest.setPassword("test12345_");
         badRequest.setRePassword("test12345");
@@ -107,7 +107,9 @@ class TestUserAdminController {
                 .perform(post("/api/admin/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(objectMapper, badRequest)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Passwords don't match!")));;
+        ;
     }
 
     @Test
@@ -145,7 +147,8 @@ class TestUserAdminController {
                 .perform(put(String.format("/api/admin/user/%s", userView.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(objectMapper, request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Method argument validation failed")));
     }
 
     @Test
@@ -157,7 +160,8 @@ class TestUserAdminController {
                 .perform(put(String.format("/api/admin/user/%s", 314))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(objectMapper, request)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Entity not found exception")));;
     }
 
     @Test
@@ -245,7 +249,8 @@ class TestUserAdminController {
     public void testGetFailNotFound() throws Exception {
         this.mockMvc
                 .perform(get(String.format("/api/admin/user/%s", 314)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Entity not found exception")));
     }
 
 }

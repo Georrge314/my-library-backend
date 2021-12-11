@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,6 +26,7 @@ import java.util.Set;
 
 import static com.bibliotek.domain.model.Genre.*;
 import static com.bibliotek.util.JsonHelper.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -108,7 +108,8 @@ class TestBookController {
                 .perform(post("/api/book")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(objectMapper, request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Method argument validation failed")));
     }
 
     @Test
@@ -145,7 +146,8 @@ class TestBookController {
                 .perform(put(String.format("/api/book/%s", bookView.getId()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(objectMapper, request)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Method argument validation failed")));
     }
 
     @Test
@@ -157,7 +159,8 @@ class TestBookController {
                 .perform(put(String.format("/api/book/%s", 314))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(objectMapper, updateRequest)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Entity not found exception")));;
     }
 
     @Test
@@ -178,7 +181,8 @@ class TestBookController {
     public void testDeleteFailNotFound() throws Exception {
         this.mockMvc
                 .perform(delete(String.format("/api/book/%s", 314)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Entity not found exception")));;
     }
 
     @Test
@@ -200,8 +204,10 @@ class TestBookController {
     public void testGetNotFound() throws Exception {
         this.mockMvc
                 .perform(get(String.format("/api/book/%s", 314)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("Entity not found exception")));
     }
+
 
 
     @Test
@@ -223,6 +229,7 @@ class TestBookController {
         ListResponse<AuthorView> authorViewList = fromJson(objectMapper,
                 getAuthorsResult.getResponse().getContentAsString(),
                 new TypeReference<>() {});
+        authorViewList.getItems().sort(Comparator.comparing(AuthorView::getId));
 
         assertEquals(3, authorViewList.getItems().size(), "Book musth have 3 authors");
         assertEquals(authorView1.getFullName(), authorViewList.getItems().get(0).getFullName(), "Author fullname mismatch!");
