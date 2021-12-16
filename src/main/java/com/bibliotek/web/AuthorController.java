@@ -50,6 +50,4 @@ public class AuthorController {
     public ListResponse<BookView> getBooks(@PathVariable Long id) {
         return new ListResponse<>(bookService.getAuthorBooks(id));
     }
-
-    //TODO impl search method
 }

@@ -74,11 +74,6 @@ public class AuthorServiceImpl implements AuthorService {
         return viewMapper.toAuthorView(author);
     }
 
-//    @Override
-//    public List<AuthorView> getAuthors(Iterable<Long> ids) {
-//        return viewMapper.toAuthorView(authorRepo.findAllById(ids));
-//    }
-
     @Override
     public List<AuthorView> getBookAuthors(Long bookId) {
         Book book = bookRepo.getById(bookId);

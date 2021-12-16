@@ -136,10 +136,4 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                         () -> new UsernameNotFoundException(String.format("User with username: %s not found.", username)
                         ));
     }
-
-    //TODO: impl list of users
-//    public List<UserView> searchUsers(Page page, SearchUsersQuery query) {
-//        List<User> users = userRepo.searchUsers(page, query);
-//        return userViewMapper.toUserView(users);
-//    }
 }

@@ -82,12 +82,6 @@ public class BookServiceImpl implements BookService {
         return viewMapper.toBookView(book);
     }
 
-//    @Override
-//    public List<BookView> getBooksByIds(Iterable<Long> ids) {
-//        Set<Book> books = bookRepo.findAllById(ids);
-//        return viewMapper.toBookView(books);
-//    }
-
     @Override
     public List<BookView> getAuthorBooks(Long authorId) {
         Author author = authorRepo.getById(authorId);

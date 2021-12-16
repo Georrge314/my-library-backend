@@ -14,8 +14,6 @@ public interface AuthorService {
 
     AuthorView getAuthorById(Long id);
 
-//    List<AuthorView> getAuthors(Iterable<Long> ids);
-
     List<AuthorView> getBookAuthors(Long bookId);
 
     Long getAuthorId(String fullName);

@@ -17,8 +17,6 @@ public interface CommentService {
 
     CommentView getCommentById(Long id);
 
-//    List<CommentView> getComments(Iterable<Long> ids);
-
     List<CommentView> getBookComments(Long bookId);
 
     void updateBook(Comment comment);

@@ -75,10 +75,6 @@ public class CommentServiceImpl implements CommentService {
         return viewMapper.toCommentView(commentRepo.getById(id));
     }
 
-//    @Override
-//    public List<CommentView> getComments(Iterable<Long> ids) {
-//        return viewMapper.toCommentView(commentRepo.findAllById(ids));
-//    }
 
     @Override
     public List<CommentView> getBookComments(Long bookId) {

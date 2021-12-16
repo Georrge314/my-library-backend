@@ -41,6 +41,4 @@ public class CommentController {
     public CommentView getComment(@PathVariable Long id) {
         return commentService.getCommentById(id);
     }
-
-    //TODO impl search method
 }
