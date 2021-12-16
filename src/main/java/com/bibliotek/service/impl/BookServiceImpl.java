@@ -2,8 +2,10 @@ package com.bibliotek.service.impl;
 
 import com.bibliotek.dao.AuthorRepo;
 import com.bibliotek.dao.BookRepo;
+import com.bibliotek.domain.dto.Page;
 import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.dto.book.EditBookRequest;
+import com.bibliotek.domain.dto.search.SearchBooksQuery;
 import com.bibliotek.domain.mapper.BookEditMapper;
 import com.bibliotek.domain.mapper.BookViewMapper;
 import com.bibliotek.domain.model.Author;
@@ -96,5 +98,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public Long getBooksCount() {
         return bookRepo.count();
+    }
+
+    @Override
+    public List<BookView> searchBooks(Page page, SearchBooksQuery query) {
+        return null;
     }
 }

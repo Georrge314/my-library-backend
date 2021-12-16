@@ -1,10 +1,12 @@
 package com.bibliotek.web;
 
 import com.bibliotek.domain.dto.ListResponse;
+import com.bibliotek.domain.dto.SearchRequest;
 import com.bibliotek.domain.dto.author.AuthorView;
 import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.dto.book.EditBookRequest;
 import com.bibliotek.domain.dto.comment.CommentView;
+import com.bibliotek.domain.dto.search.SearchBooksQuery;
 import com.bibliotek.domain.model.Role;
 import com.bibliotek.service.AuthorService;
 import com.bibliotek.service.BookService;
@@ -61,5 +63,8 @@ public class BookController {
         return new ListResponse<>(commentService.getBookComments(id));
     }
 
-    //TODO: impl search book that return list of books..
+    @PostMapping("search")
+    public ListResponse<BookView> searchBook(@RequestBody @Valid SearchRequest<SearchBooksQuery> request) {
+        return new ListResponse<>(bookService.searchBooks(request.getPage(), request.getQuery()));
+    }
 }

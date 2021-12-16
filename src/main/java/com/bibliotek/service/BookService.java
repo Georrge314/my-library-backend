@@ -1,7 +1,9 @@
 package com.bibliotek.service;
 
+import com.bibliotek.domain.dto.Page;
 import com.bibliotek.domain.dto.book.BookView;
 import com.bibliotek.domain.dto.book.EditBookRequest;
+import com.bibliotek.domain.dto.search.SearchBooksQuery;
 
 
 import java.util.List;
@@ -15,9 +17,9 @@ public interface BookService {
 
     BookView getBookById(Long id);
 
-//    List<BookView> getBooksByIds(Iterable<Long> ids);
-
     List<BookView> getAuthorBooks(Long authorId);
 
     Long getBooksCount();
+
+    List<BookView> searchBooks(Page page, SearchBooksQuery query);
 }
